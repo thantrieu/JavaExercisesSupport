@@ -1,3 +1,4 @@
+import javax.xml.validation.SchemaFactoryConfigurationError;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -30,7 +31,9 @@ public class Exercises3Test {
                     System.out.println("======= CHƯƠNG TRÌNH KẾT THÚC =======");
                     break;
                 case 1:
-
+                    var s = createNewSubject(input);
+                    subjects.add(s);
+                    System.out.println("==> Thêm môn học thành công <==");
                     break;
                 case 2:
 
@@ -42,7 +45,7 @@ public class Exercises3Test {
 
                     break;
                 case 5:
-
+                    showSubjects(subjects);
                     break;
                 case 6:
 
@@ -64,5 +67,33 @@ public class Exercises3Test {
                     break;
             }
         } while (choice != 0);
+    }
+
+    private static void showSubjects(ArrayList<Subject> subjects) {
+        System.out.println("=========================> DANH SÁCH MÔN HỌC <=========================");
+        System.out.printf("%-12s%-25s%-12s%-12s%-12s\n",
+                "Mã môn", "Tên môn", "Số tín", "Số tiết", "Số bài KT");
+        for (var s : subjects) {
+            showSubject(s);
+        }
+    }
+
+    private static void showSubject(Subject s) {
+        System.out.printf("%-12s%-25s%-12s%-12s%-12s\n",
+                s.getId(), s.getName(), s.getCredit(), s.getNumOfLesson(), s.getNumOfExam());
+    }
+
+    private static Subject createNewSubject(Scanner input) {
+        System.out.println("Mã môn học: ");
+        var id = input.nextLine();
+        System.out.println("Tên môn học: ");
+        var name = input.nextLine();
+        System.out.println("Số tín chỉ: ");
+        var credit = input.nextInt();
+        System.out.println("Số tiết học: ");
+        var lesson = input.nextInt();
+        System.out.println("Số bài kiểm tra: ");
+        var numOfExam = input.nextInt();
+        return new Subject(id, name, credit, lesson, numOfExam);
     }
 }
