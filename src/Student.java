@@ -31,6 +31,19 @@ public class Student {
         this.setFullName(fullName);
     }
 
+    public Student(String id, String address, String fullName, String email,
+                   String gender, String className, String major, String phoneNumber) {
+        this();
+        this.id = id;
+        this.address = address;
+        this.setFullName(fullName);
+        this.email = email;
+        this.gender = gender;
+        this.className = className;
+        this.major = major;
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getId() {
         return id;
     }
@@ -56,7 +69,7 @@ public class Student {
         this.fullName.first = words[words.length - 1];
         this.fullName.last = words[0];
         this.fullName.mid = "";
-        for (int i = 1; i < words.length; i++) {
+        for (int i = 1; i < words.length - 1; i++) {
             this.fullName.mid += words[i] + " ";
         }
     }

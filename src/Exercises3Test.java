@@ -36,10 +36,22 @@ public class Exercises3Test {
                     System.out.println("==> Thêm môn học thành công <==");
                     break;
                 case 2:
-
+                    var student = createNewStudent(input);
+                    students.add(student);
+                    System.out.println("==> Thêm mới sinh viên thành công <==");
                     break;
                 case 3:
-
+                    if(subjects.size() > 0) {
+                        var course = createNewCourse(input, subjects);
+                        if(course != null) {
+                            courses.add(course);
+                            System.out.println("==> Thêm lớp học thành công <==");
+                        } else {
+                            System.out.println("==> Thêm lớp học thất bại <==");
+                        }
+                    } else {
+                        System.out.println("==> Danh sách môn học rỗng <==");
+                    }
                     break;
                 case 4:
 
@@ -48,10 +60,10 @@ public class Exercises3Test {
                     showSubjects(subjects);
                     break;
                 case 6:
-
+                    showStudents(students);
                     break;
                 case 7:
-
+                    showCourses(courses);
                     break;
                 case 8:
 
@@ -69,8 +81,92 @@ public class Exercises3Test {
         } while (choice != 0);
     }
 
+    private static void showCourses(ArrayList<Course> courses) {
+        System.out.println("=================> Danh sách các lớp học <=================");
+        System.out.printf("%-12s%-25s%-15s%-15s%-15s\n",
+                "Mã lớp", "Tên lớp", "Phòng học", "Giờ học", "Môn học");
+        for (var course : courses) {
+            showCourse(course);
+        }
+    }
+
+    private static void showCourse(Course course) {
+        System.out.printf("%-12s%-25s%-15s%-15s%-15s\n",
+                course.getId(), course.getName(), course.getClassRoom(),
+                course.getTime(), course.getSubject().getName());
+    }
+
+    private static Course createNewCourse(Scanner input, ArrayList<Subject> subjects) {
+        System.out.println("Nhập mã lớp học: ");
+        var id = input.nextLine();
+        System.out.println("Nhập tên lớp học: ");
+        var name = input.nextLine();
+        System.out.println("Nhập tên phòng học: ");
+        var room = input.nextLine();
+        System.out.println("Nhập giờ học: ");
+        var time = input.nextLine();
+        System.out.println("Nhập mã môn học: ");
+        var subjectId = input.nextLine();
+        var subject = findSubjectById(subjects, subjectId);
+        if(subject == null) {
+            System.out.println("==> Không tồn tại môn học có mã vừa nhập <==");
+            return null;
+        } else {
+            return new Course(id, name, room, time, subject);
+        }
+    }
+
+    private static Subject findSubjectById(ArrayList<Subject> subjects, String subjectId) {
+        for(var s : subjects) {
+            if(s.getId().compareTo(subjectId) == 0) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    private static void showStudents(ArrayList<Student> students) {
+        System.out.println("===============================================> " +
+                "Danh sách sinh viên <===============================================");
+        System.out.printf("%-12s%-22s%-15s%-20s%-12s%-15s%-15s%-15s\n",
+                "Mã SV", "Họ và tên", "Địa chỉ", "Email", "Giới tính", "Số ĐT",
+                "Lớp", "Khoa");
+        for (var student : students) {
+            showStudent(student);
+        }
+    }
+
+    private static void showStudent(Student student) {
+        System.out.printf("%-12s%-22s%-15s%-20s%-12s%-15s%-15s%-15s\n",
+                student.getId(), student.getFullName(), student.getAddress(),
+                student.getEmail(), student.getGender(), student.getPhoneNumber(),
+                student.getClassName(), student.getMajor());
+    }
+
+    private static Student createNewStudent(Scanner input) {
+        System.out.println("Nhập mã sinh viên: ");
+        var id = input.nextLine();
+        System.out.println("Nhập họ và tên: ");
+        var fullName = input.nextLine();
+        System.out.println("Nhập địa chỉ: ");
+        var address = input.nextLine();
+        System.out.println("Nhập email: ");
+        var email = input.nextLine();
+        System.out.println("Nhập số điện thoại: ");
+        var phoneNumber = input.nextLine();
+        System.out.println("Nhập giới tính: ");
+        var gender = input.nextLine();
+        System.out.println("Nhập lớp: ");
+        var className = input.nextLine();
+        System.out.println("Nhập khoa: ");
+        var major = input.nextLine();
+        return new Student(id, address, fullName,
+                email, gender, className, major, phoneNumber);
+    }
+
     private static void showSubjects(ArrayList<Subject> subjects) {
-        System.out.println("=========================> DANH SÁCH MÔN HỌC <=========================");
+        System.out.println("=========================> " +
+                "DANH SÁCH MÔN HỌC <=========================");
         System.out.printf("%-12s%-25s%-12s%-12s%-12s\n",
                 "Mã môn", "Tên môn", "Số tín", "Số tiết", "Số bài KT");
         for (var s : subjects) {
@@ -80,7 +176,8 @@ public class Exercises3Test {
 
     private static void showSubject(Subject s) {
         System.out.printf("%-12s%-25s%-12s%-12s%-12s\n",
-                s.getId(), s.getName(), s.getCredit(), s.getNumOfLesson(), s.getNumOfExam());
+                s.getId(), s.getName(), s.getCredit(),
+                s.getNumOfLesson(), s.getNumOfExam());
     }
 
     private static Subject createNewSubject(Scanner input) {

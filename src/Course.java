@@ -17,6 +17,14 @@ public class Course {
         transcriptOfStudents = new ArrayList<>();
     }
 
+    public Course(String id, String name, String classRoom, String time, Subject subject) {
+        this.id = id;
+        this.name = name;
+        this.classRoom = classRoom;
+        this.time = time;
+        this.subject = subject;
+    }
+
     public String getId() {
         return id;
     }
