@@ -18,6 +18,7 @@ public class Course {
     }
 
     public Course(String id, String name, String classRoom, String time, Subject subject) {
+        transcriptOfStudents = new ArrayList<>();
         this.id = id;
         this.name = name;
         this.classRoom = classRoom;
@@ -67,6 +68,10 @@ public class Course {
 
     public ArrayList<TranscriptOfStudent> getTranscriptOfStudents() {
         return transcriptOfStudents;
+    }
+
+    public void addStudentToCourse(Student student) {
+        transcriptOfStudents.add(new TranscriptOfStudent(student, null));
     }
 
     public void setTranscriptOfStudents(Student student, Transcript transcript) {

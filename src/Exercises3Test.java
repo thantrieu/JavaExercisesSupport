@@ -1,4 +1,3 @@
-import javax.xml.validation.SchemaFactoryConfigurationError;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -41,9 +40,9 @@ public class Exercises3Test {
                     System.out.println("==> Thêm mới sinh viên thành công <==");
                     break;
                 case 3:
-                    if(subjects.size() > 0) {
+                    if (subjects.size() > 0) {
                         var course = createNewCourse(input, subjects);
-                        if(course != null) {
+                        if (course != null) {
                             courses.add(course);
                             System.out.println("==> Thêm lớp học thành công <==");
                         } else {
@@ -54,7 +53,16 @@ public class Exercises3Test {
                     }
                     break;
                 case 4:
-
+                    if (courses.size() > 0 && students.size() > 0) {
+                        var isSucess = addStudentToCourse(courses, students, input);
+                        if (isSucess) {
+                            System.out.println("==> Thêm sinh viên vào lớp học thành công! <==");
+                        } else {
+                            System.out.println("==> Thêm sinh viên vào lớp học thất bại! <==");
+                        }
+                    } else {
+                        System.out.println("==> Danh sách lớp học hoặc danh sách sinh viên rỗng. <==");
+                    }
                     break;
                 case 5:
                     showSubjects(subjects);
@@ -79,6 +87,57 @@ public class Exercises3Test {
                     break;
             }
         } while (choice != 0);
+    }
+
+    private static boolean addStudentToCourse(ArrayList<Course> courses,
+                                              ArrayList<Student> students, Scanner input) {
+        System.out.println("Nhập mã lớp học: ");
+        var courseId = input.nextLine();
+        var course = findCourseById(courses, courseId);
+        if (course != null) {
+            showStudentInCourse(course.getTranscriptOfStudents());
+            System.out.println("Nhập mã sinh viên: ");
+            var studentId = input.nextLine();
+            var student = findStudentById(students, studentId);
+            if (student != null) {
+                course.addStudentToCourse(student);
+                return true;
+            } else {
+                System.out.println("==> Sinh viên cần tìm không tồn tại <==");
+                return false;
+            }
+        } else {
+            System.out.println("==> Lớp cần tìm không tồn tại <==");
+            return false;
+        }
+    }
+
+    private static Student findStudentById(ArrayList<Student> students, String studentId) {
+        for (int i = 0; i < students.size(); i++) {
+            if (studentId.compareTo(students.get(i).getId()) == 0) {
+                return students.get(i);
+            }
+        }
+        return null;
+    }
+
+    private static void showStudentInCourse(ArrayList<Course.TranscriptOfStudent> transcriptOfStudents) {
+        System.out.println("==> Các sinh viên đã có trong lớp học: <==");
+        System.out.printf("%-12s%-22s%-20s%-20s%-12s%-20s%-15s%-15s\n",
+                "Mã SV", "Họ và tên", "Địa chỉ", "Email", "Giới tính", "Số ĐT",
+                "Lớp", "Khoa");
+        for (var item : transcriptOfStudents) {
+            showStudent(item.getStudent());
+        }
+    }
+
+    private static Course findCourseById(ArrayList<Course> courses, String courseId) {
+        for (int i = 0; i < courses.size(); i++) {
+            if (courseId.compareTo(courses.get(i).getId()) == 0) {
+                return courses.get(i);
+            }
+        }
+        return null;
     }
 
     private static void showCourses(ArrayList<Course> courses) {
@@ -108,7 +167,7 @@ public class Exercises3Test {
         System.out.println("Nhập mã môn học: ");
         var subjectId = input.nextLine();
         var subject = findSubjectById(subjects, subjectId);
-        if(subject == null) {
+        if (subject == null) {
             System.out.println("==> Không tồn tại môn học có mã vừa nhập <==");
             return null;
         } else {
@@ -117,8 +176,8 @@ public class Exercises3Test {
     }
 
     private static Subject findSubjectById(ArrayList<Subject> subjects, String subjectId) {
-        for(var s : subjects) {
-            if(s.getId().compareTo(subjectId) == 0) {
+        for (var s : subjects) {
+            if (s.getId().compareTo(subjectId) == 0) {
                 return s;
             }
         }
