@@ -81,7 +81,11 @@ public class Exercises3Test {
                     }
                     break;
                 case 9:
-
+                    if(courses.size() > 0) {
+                        calculCapacity(courses);
+                    } else {
+                        System.out.println("==> Danh sách lớp học rỗng <==");
+                    }
                     break;
                 case 10:
 
@@ -91,6 +95,36 @@ public class Exercises3Test {
                     break;
             }
         } while (choice != 0);
+    }
+
+    private static void calculCapacity(ArrayList<Course> courses) {
+        System.out.println("Nhập mã lớp học cần xét học lực: ");
+        var input = new Scanner(System.in);
+        var id = input.nextLine();
+        var course = findCourseById(courses, id);
+        if(course != null) {
+            if(course.getTranscriptOfStudents().size() > 0) {
+                boolean isSucess = true;
+                for (int i = 0; i < course.getTranscriptOfStudents().size(); i++) {
+                    if(course.getTranscriptOfStudents().get(i).getTranscript() != null) {
+                        course.getTranscriptOfStudents().get(i).getTranscript().calculCapacity();
+                    } else {
+                        System.out.println("==> Chưa nhập bảng điểm <==");
+                        isSucess = false;
+                        break;
+                    }
+                }
+                if(isSucess) {
+                    System.out.println("==> Xét học lực thành công <==");
+                } else {
+                    System.out.println("==> Xét học lực thất bại <==");
+                }
+            } else {
+                System.out.println("==> Lớp học này chưa có sinh viên nào <==");
+            }
+        } else {
+            System.out.println("==> Lớp học cần tìm không tồn tại <==");
+        }
     }
 
     private static void addGrades(ArrayList<Course> courses, Scanner input) {
