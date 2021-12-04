@@ -74,7 +74,11 @@ public class Exercises3Test {
                     showCourses(courses);
                     break;
                 case 8:
-
+                    if (courses.size() > 0) {
+                        addGrades(courses, input);
+                    } else {
+                        System.out.println("==> Danh sách lớp học rỗng <==");
+                    }
                     break;
                 case 9:
 
@@ -87,6 +91,51 @@ public class Exercises3Test {
                     break;
             }
         } while (choice != 0);
+    }
+
+    private static void addGrades(ArrayList<Course> courses, Scanner input) {
+        System.out.println("Nhập mã lớp học: ");
+        var courseId = input.nextLine();
+        var course = findCourseById(courses, courseId);
+        if (course != null) {
+            showStudentInCourse(course.getTranscriptOfStudents());
+            System.out.println("Nhập mã sinh viên: ");
+            var studentId = input.nextLine();
+            var isFound = false;
+            for (var s : course.getTranscriptOfStudents()) {
+                if (s.getStudent().getId().compareTo(studentId) == 0) {
+                    isFound = true;
+                    break;
+                }
+            }
+            if (isFound) {
+                var tran = createTranscript();
+                course.setTranscriptOfStudents(new Student(studentId), tran);
+                System.out.println("==> Cập nhật bảng điểm thành công <==");
+            } else {
+                System.out.println("==> Không tồn tại sinh viên có mã vừa nhập trong danh sách lớp <==");
+            }
+        } else {
+            System.out.println("==> Không tồn tại lớp học cần tìm <==");
+        }
+    }
+
+    private static Transcript createTranscript() {
+        Transcript transcript = new Transcript();
+        var input = new Scanner(System.in);
+        System.out.println("Nhập điểm hệ số 1: ");
+        var g1 = input.nextFloat();
+        System.out.println("Nhập điểm hệ số 2: ");
+        var g2 = input.nextFloat();
+        System.out.println("Nhập điểm hệ số 3: ");
+        var g3 = input.nextFloat();
+
+        transcript.setGrade1(g1);
+        transcript.setGrade2(g2);
+        transcript.setGrade3(g3);
+        transcript.calculGpa();
+
+        return transcript;
     }
 
     private static boolean addStudentToCourse(ArrayList<Course> courses,
@@ -123,7 +172,7 @@ public class Exercises3Test {
 
     private static void showStudentInCourse(ArrayList<Course.TranscriptOfStudent> transcriptOfStudents) {
         System.out.println("==> Các sinh viên đã có trong lớp học: <==");
-        System.out.printf("%-12s%-22s%-20s%-20s%-12s%-20s%-15s%-15s\n",
+        System.out.printf("%-12s%-22s%-15s%-20s%-12s%-15s%-15s%-15s\n",
                 "Mã SV", "Họ và tên", "Địa chỉ", "Email", "Giới tính", "Số ĐT",
                 "Lớp", "Khoa");
         for (var item : transcriptOfStudents) {
