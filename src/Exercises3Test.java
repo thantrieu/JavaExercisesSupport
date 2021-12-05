@@ -23,6 +23,7 @@ public class Exercises3Test {
             System.out.println("=   8. Nhập và tính điểm trung bình.                    =");
             System.out.println("=   9. Xét học lực cho các sinh viên trong lớp.         =");
             System.out.println("=   10. Tìm sinh viên theo mã trong lớp học nào đó.     =");
+            System.out.println("=   11. Hiển thị bảng điểm sinh viên trong lớp nào đó.  =");
             System.out.println("=   0. Thoát chương trình.                              =");
             System.out.println("=========================================================");
             System.out.println("Xin mời chọn: ");
@@ -84,15 +85,29 @@ public class Exercises3Test {
                     }
                     break;
                 case 9:
-                    if(courses.size() > 0) {
+                    if (courses.size() > 0) {
                         calculCapacity(courses);
                     } else {
                         System.out.println("==> Danh sách lớp học rỗng <==");
                     }
                     break;
                 case 10:
-                    if(courses.size() > 0) {
+                    if (courses.size() > 0) {
                         searchStudentInTheCourse(courses, students, input);
+                    } else {
+                        System.out.println("==> Danh sách lớp học rỗng <==");
+                    }
+                    break;
+                case 11:
+                    if (courses.size() > 0) {
+                        System.out.println("Nhập mã lớp cần hiển thị thông tin bảng điểm: ");
+                        var courseId = input.nextLine();
+                        var couse = findCourse(courses, courseId);
+                        if (couse != null) {
+                            showTranscripts(couse);
+                        } else {
+                            System.out.println("==> Không tìm thấy lớp học theo yêu cầu. <==");
+                        }
                     } else {
                         System.out.println("==> Danh sách lớp học rỗng <==");
                     }
@@ -104,6 +119,20 @@ public class Exercises3Test {
         } while (choice != 0);
     }
 
+    private static void showTranscripts(Course couse) {
+        // mã lớp, mã sinh viên, họ tên sinh viên, điểm bài ktra 1, 2, 3, điểm TB, học lực
+        System.out.printf("%-10s%-12s%-20s%-10s%-10s%-10s%-10s%-12s\n",
+                "Mã lớp", "Mã SV", "Họ tên", "Điểm H1", "Điểm H2",
+                "Điểm H3", "Điểm TB", "Học lực");
+        for (var tos : couse.getTranscriptOfStudents()) {
+            System.out.printf("%-10s%-12s%-20s%-10.2f%-10.2f%-10.2f%-10.2f%-12s\n",
+                    couse.getId(), tos.getStudent().getId(), tos.getStudent().getFullName(),
+                    tos.getTranscript().getGrade1(), tos.getTranscript().getGrade2(),
+                    tos.getTranscript().getGrade3(), tos.getTranscript().getGpa(),
+                    tos.getTranscript().getCapacity().getValue());
+        }
+    }
+
     private static void searchStudentInTheCourse(
             ArrayList<Course> courses, ArrayList<Student> students, Scanner input) {
         System.out.println("Nhập mã sinh viên cần tìm: ");
@@ -111,10 +140,10 @@ public class Exercises3Test {
         System.out.println("Nhập mã lớp cần tìm: ");
         var courseId = input.nextLine();
         var course = findCourse(courses, studentId, courseId);
-        if(course != null) {
+        if (course != null) {
             System.out.println("==> Tìm thấy sinh viên mã \"" + studentId + "\"! <==");
-            for(var student : students) {
-                if(student.getId().compareTo(studentId) == 0) {
+            for (var student : students) {
+                if (student.getId().compareTo(studentId) == 0) {
                     showStudent(student);
                     break;
                 }
@@ -124,13 +153,23 @@ public class Exercises3Test {
         }
     }
 
+    private static Course findCourse(ArrayList<Course> courses, String courseId) {
+        for (int i = 0; i < courses.size(); i++) {
+            var course = courses.get(i);
+            if (course.getId().compareTo(courseId) == 0) {
+                return course;
+            }
+        }
+        return null;
+    }
+
     private static Course findCourse(ArrayList<Course> courses, String studentId, String courseId) {
         for (int i = 0; i < courses.size(); i++) {
             var course = courses.get(i);
-            if(course.getId().compareTo(courseId) == 0) {
+            if (course.getId().compareTo(courseId) == 0) {
                 for (int j = 0; j < course.getTranscriptOfStudents().size(); j++) {
                     var tos = course.getTranscriptOfStudents().get(j);
-                    if(tos.getStudent().getId().compareTo(studentId) == 0) {
+                    if (tos.getStudent().getId().compareTo(studentId) == 0) {
                         return course;
                     }
                 }
@@ -180,11 +219,11 @@ public class Exercises3Test {
         var input = new Scanner(System.in);
         var id = input.nextLine();
         var course = findCourseById(courses, id);
-        if(course != null) {
-            if(course.getTranscriptOfStudents().size() > 0) {
+        if (course != null) {
+            if (course.getTranscriptOfStudents().size() > 0) {
                 boolean isSucess = true;
                 for (int i = 0; i < course.getTranscriptOfStudents().size(); i++) {
-                    if(course.getTranscriptOfStudents().get(i).getTranscript() != null) {
+                    if (course.getTranscriptOfStudents().get(i).getTranscript() != null) {
                         course.getTranscriptOfStudents().get(i).getTranscript().calculCapacity();
                     } else {
                         System.out.println("==> Chưa nhập bảng điểm <==");
@@ -192,7 +231,7 @@ public class Exercises3Test {
                         break;
                     }
                 }
-                if(isSucess) {
+                if (isSucess) {
                     System.out.println("==> Xét học lực thành công <==");
                 } else {
                     System.out.println("==> Xét học lực thất bại <==");
