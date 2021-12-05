@@ -7,6 +7,9 @@ public class Exercises3Test {
         ArrayList<Subject> subjects = new ArrayList<>();
         ArrayList<Student> students = new ArrayList<>();
         ArrayList<Course> courses = new ArrayList<>();
+        createFakeSubjects(subjects);
+        createFakeStudents(students);
+        createFakeCourses(courses, subjects);
         var input = new Scanner(System.in);
         do {
             System.out.println("======================= MENU ============================");
@@ -88,13 +91,88 @@ public class Exercises3Test {
                     }
                     break;
                 case 10:
-
+                    if(courses.size() > 0) {
+                        searchStudentInTheCourse(courses, students, input);
+                    } else {
+                        System.out.println("==> Danh sách lớp học rỗng <==");
+                    }
                     break;
                 default:
                     System.out.println("=== Sai chức năng. Vui lòng chọn lại! ===");
                     break;
             }
         } while (choice != 0);
+    }
+
+    private static void searchStudentInTheCourse(
+            ArrayList<Course> courses, ArrayList<Student> students, Scanner input) {
+        System.out.println("Nhập mã sinh viên cần tìm: ");
+        var studentId = input.nextLine();
+        System.out.println("Nhập mã lớp cần tìm: ");
+        var courseId = input.nextLine();
+        var course = findCourse(courses, studentId, courseId);
+        if(course != null) {
+            System.out.println("==> Tìm thấy sinh viên mã \"" + studentId + "\"! <==");
+            for(var student : students) {
+                if(student.getId().compareTo(studentId) == 0) {
+                    showStudent(student);
+                    break;
+                }
+            }
+        } else {
+            System.out.println("==> Không tìm thấy sinh viên này <==");
+        }
+    }
+
+    private static Course findCourse(ArrayList<Course> courses, String studentId, String courseId) {
+        for (int i = 0; i < courses.size(); i++) {
+            var course = courses.get(i);
+            if(course.getId().compareTo(courseId) == 0) {
+                for (int j = 0; j < course.getTranscriptOfStudents().size(); j++) {
+                    var tos = course.getTranscriptOfStudents().get(j);
+                    if(tos.getStudent().getId().compareTo(studentId) == 0) {
+                        return course;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static void createFakeCourses(ArrayList<Course> courses, ArrayList<Subject> subjects) {
+        courses.add(new Course("C001", "Java OOP 01", "A2-101", "14h00-16h00", subjects.get(0)));
+        courses.add(new Course("C002", "Java OOP 02", "A2-201", "14h00-18h00", subjects.get(0)));
+        courses.add(new Course("C001", "Java OOP 03", "A2-301", "14h00-16h00", subjects.get(0)));
+        courses.add(new Course("C001", "Java OOP 04", "A3-401", "8h00-12h00", subjects.get(0)));
+    }
+
+    // String id, String address, String fullName, String email,
+    //                   String gender, String className, String major, String phoneNumber
+    private static void createFakeStudents(ArrayList<Student> students) {
+        students.add(new Student("SV001", "Ha Noi", "Tran Van Nam",
+                "nam@xmail.com", "Nam", "CN1", "CNTT", "0977458654"));
+        students.add(new Student("SV002", "Ha Noi", "Tran Van Hung",
+                "hung@xmail.com", "Nam", "CN2", "CNTT", "0912321456"));
+        students.add(new Student("SV003", "Ha Noi", "Le Van Tam",
+                "tam@xmail.com", "Nam", "CN1", "CNTT", "0912354785"));
+        students.add(new Student("SV004", "Ha Noi", "Hoang Thanh Trung",
+                "trung@xmail.com", "Nam", "CN3", "CNTT", "0987123123"));
+        students.add(new Student("SV005", "Ha Noi", "Truong Van Khanh",
+                "khanh@xmail.com", "Nam", "CN1", "CNTT", "0934125478"));
+        students.add(new Student("SV006", "Ha Noi", "Nguyen Thuy Trang",
+                "trang@xmail.com", "Nu", "CN1", "CNTT", "035864123"));
+        students.add(new Student("SV007", "Ha Noi", "Ngo Thi Lan",
+                "lan@xmail.com", "Nu", "CN2", "CNTT", "032145698"));
+        students.add(new Student("SV008", "Ha Noi", "Doan Thanh Huong",
+                "huong@xmail.com", "Nu", "CN3", "CNTT", "0358123654"));
+    }
+
+    private static void createFakeSubjects(ArrayList<Subject> subjects) {
+        subjects.add(new Subject("SJ001", "Java OOP", 4, 40, 3));
+        subjects.add(new Subject("SJ002", "Java Web", 4, 42, 3));
+        subjects.add(new Subject("SJ003", "C++", 3, 32, 3));
+        subjects.add(new Subject("SJ004", "Python", 4, 40, 3));
+        subjects.add(new Subject("SJ004", "C#", 3, 32, 3));
     }
 
     private static void calculCapacity(ArrayList<Course> courses) {
@@ -224,7 +302,8 @@ public class Exercises3Test {
     }
 
     private static void showCourses(ArrayList<Course> courses) {
-        System.out.println("=================> Danh sách các lớp học <=================");
+        System.out.println("==========================> " +
+                "Danh sách các lớp học <==========================");
         System.out.printf("%-12s%-25s%-15s%-15s%-15s\n",
                 "Mã lớp", "Tên lớp", "Phòng học", "Giờ học", "Môn học");
         for (var course : courses) {
